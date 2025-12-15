@@ -9,7 +9,6 @@ import { getRuntimeConfigBoolean, getRuntimeConfigArray, getRuntimeConfig } from
 import { createSymbolDataAdapter } from "@/utils/symbol-filter";
 import { DemoGraduationChecker } from "@/components/DemoGraduationChecker";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import ServiceDisclaimerDialog from "./ServiceRestrictionsDialog";
 import { useIpRestriction } from "@/hooks/useIpRestriction";
 
 const NETWORK_ID_KEY = "orderly_network_id";
@@ -158,16 +157,16 @@ const OrderlyProvider = (props: { children: ReactNode }) => {
 		availableLanguages.includes(lang.localCode)
 	);
 
-	if (isRestricted) {
-		return (
-			<>
-				<ServiceDisclaimerDialog isRestricted={isRestricted} />
-				<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#101014', color: '#fff', fontSize: '2rem', fontWeight: 'bold' }}>
-					Service not available in your region.
-				</div>
-			</>
-		);
-	}
+	// if (isRestricted) {
+	// 	return (
+	// 		<>
+	// 			<ServiceDisclaimerDialog isRestricted={isRestricted} />
+	// 			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#101014', color: '#fff', fontSize: '2rem', fontWeight: 'bold' }}>
+	// 				Service not available in your region.
+	// 			</div>
+	// 		</>
+	// 	);
+	// }
 
 	const appProvider = (
 		<OrderlyAppProvider
@@ -180,9 +179,12 @@ const OrderlyProvider = (props: { children: ReactNode }) => {
 			{...(chainFilter && { chainFilter } as any)}
 			defaultChain={defaultChain}
 			dataAdapter={dataAdapter}
+			restrictedInfo={{
+				customRestrictedRegions: getRuntimeConfigArray('VITE_RESTRICTED_REGIONS'),
+			}}
 		>
 			<DemoGraduationChecker />
-			<ServiceDisclaimerDialog isRestricted={isRestricted} />
+			{/* <ServiceDisclaimerDialog isRestricted={isRestricted} /> */}
 			{props.children}
 		</OrderlyAppProvider>
 	);
